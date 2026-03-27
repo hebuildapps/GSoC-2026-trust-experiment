@@ -12,6 +12,7 @@ export default function Experiment() {
   const [recommendation, setRecommendation] = useState("Loading recommendation...");
 
   // AI Recommendation Generation Block (Commented out default)
+  /*
   const fetchAIRecommendation = async (tone: string) => {
     try {
       // Usage example with Groq or any generic OpenAI-compatible API
@@ -31,7 +32,6 @@ export default function Experiment() {
       });
 
       const data = await response.json();
-
       // Protected check in case Groq returns a 400/401 API Error
       if (!response.ok) {
         throw new Error(data.error?.message || "API returned status: " + response.status);
@@ -43,19 +43,22 @@ export default function Experiment() {
       return null;
     }
   };
+*/
 
   useEffect(() => {
-    // 1. Generate unique participant ID
+    let ignore = false; // Fixed React 18 Strict Mode Issue
+
+    // generating unique participant ID
     const id = window.crypto && crypto.randomUUID
       ? crypto.randomUUID()
       : 'user-' + Date.now().toString(36) + Math.random().toString(36).substring(2);
     setParticipantId(id);
 
-    // 2. Randomize Condition
+    // randomizing Condition
     const cond = Math.random() < 0.5 ? "A" : "B";
     setCondition(cond);
 
-    // Currently Hardcoded Recommendation
+    // hardcoded recommendation - default fallback
     if (cond === "A") {
       setRecommendation("Based on an algorithmic analysis of your data parameters, the optimal selection is Product Zeta. Its features align closely with your specified operational constraints.");
     } else {
@@ -66,13 +69,16 @@ export default function Experiment() {
     const requiredTone = cond === "A"
       ? "analytical and formal. Use technical language and reference data/metrics."
       : "warm and conversational. Speak like a helpful friend, use 'you' directly.";
+    /*
+        fetchAIRecommendation(requiredTone).then(aiText => {
+          if (!ignore && aiText) setRecommendation(aiText);
+        });
+    */
 
-    fetchAIRecommendation(requiredTone).then(aiText => {
-      if (aiText) setRecommendation(aiText);
-    });
-
-    // 4. Start timer precise tracking
+    // start timer precise tracking
     setStartTime(performance.now());
+
+    return () => { ignore = true; }; // Cleanup prevents stale state overwrite
   }, []);
 
   const handleDecision = (decision: "accept" | "reject") => {
@@ -87,7 +93,7 @@ export default function Experiment() {
       latency_ms: latencyMs
     };
 
-    // Trigger Download
+    // downloading dataset - json format
     const dataString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(experimentData, null, 2));
     const downloadAnchorNode = document.createElement("a");
     downloadAnchorNode.setAttribute("href", dataString);

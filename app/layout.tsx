@@ -2,7 +2,7 @@ import "./globals.css";
 
 export const metadata = {
   title: "AI Recommendation Module",
-  description: "A minimal A/B trust experiment",
+  description: "A light-weight conditional A/B trust experiment - recommendation of product",
 };
 
 export default function RootLayout({
