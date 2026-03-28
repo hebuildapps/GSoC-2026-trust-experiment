@@ -12,37 +12,35 @@ export default function Experiment() {
   const [recommendation, setRecommendation] = useState("Loading recommendation...");
   const [sysTime, setSysTime] = useState("");
 
-  // AI Recommendation Generation Block (Commented out default)
-  /*
-    const fetchAIRecommendation = async (tone: string) => {
-      try {
-        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_AI_API_KEY}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            model: "llama-3.1-8b-instant", //current config - LLM Model
-            messages: [{
-              role: "system",
-              content: `You are a product advisor. Recommend 'Product Zeta' in exactly 2 sentences. Tone: ${tone}. Be direct. Do not explain your reasoning.`
-            }]
-          })
-        });
-  
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.error?.message || "API returned status: " + response.status);
-        }
-  
-        return data.choices[0].message.content;
-      } catch (error) {
-        console.error("AI fetch failed:", error);
-        return null;
+  // AI Recommendation Generation Block (Commented out - updated)
+  const fetchAIRecommendation = async (tone: string) => {
+    try {
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${process.env.NEXT_PUBLIC_AI_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "llama-3.1-8b-instant", //current config - LLM Model
+          messages: [{
+            role: "system",
+            content: `You are a product advisor. Recommend 'Product Zeta' in exactly 2 sentences. Tone: ${tone}. Be direct. Do not explain your reasoning.`
+          }]
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error?.message || "API returned status: " + response.status);
       }
-    };
-  */
+
+      return data.choices[0].message.content;
+    } catch (error) {
+      console.error("AI fetch failed:", error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     let ignore = false;
@@ -74,12 +72,10 @@ export default function Experiment() {
     const requiredTone = cond === "A"
       ? "analytical and formal. Use technical language and reference data/metrics."
       : "warm and conversational. Speak like a helpful friend, use 'you' directly.";
-    // Commented block : for AI Recommendation Generation
-    /*
-        fetchAIRecommendation(requiredTone).then(aiText => {
-          if (!ignore && aiText) setRecommendation(aiText);
-        });
-        */
+    // Commented block : for AI Recommendation Generation - updated
+    fetchAIRecommendation(requiredTone).then(aiText => {
+      if (!ignore && aiText) setRecommendation(aiText);
+    });
 
     setStartTime(performance.now());
 
