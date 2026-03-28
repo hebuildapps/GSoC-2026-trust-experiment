@@ -9,20 +9,37 @@ A lightweight, minimal dependency Next.js implementation of the A/B AI Trust exp
 ## Features
 - **A/B Logic**: Randomly assigns users(participants) with a recommendation as Condition A (Technical) or Condition B (Warm/Friendly).
 - **High-Resolution Latency Logging**: Uses `performance.now()` to measure click latency to the nearest millisecond.
-- **Data Export**: Logs all required parameters - participant_id, condition, decision, timestamp,  latency_ms  as structured JSON, downloaded immediately on decision, exactly as specified. JSON - Based Installing the data.
-- **AI Recommendation Ready**: Includes a commented-out API block (e.g., Groq/OpenAI) for dynamically fetching generated recommendations based on either  Condition A (Technical) or Condition B (Warm/Friendly); maintaing the prompt structure with a system prompt.
+- **Data Export**: Logs all required parameters - `participant_id`, `condition`, `decision`, `timestamp`, `latency_ms` as structured JSON, downloaded immediately on decision, exactly as specified.
+- **AI Recommendation Ready**: Includes a commented-out API block (e.g., Groq/OpenAI) for dynamically fetching generated recommendations based on either Condition A (Technical) or Condition B (Warm/Friendly); maintaining the prompt structure with a system prompt.
+
+## Condition Logic
+- **Condition A (Technical)** - recommendation framed with precise, data-driven language
+- **Condition B (Warm/Friendly)** - same recommendation framed in conversational, empathetic language
+
+Assignment is done client-side on page load. Each participant sees only one condition.
+
+## Sample Output
+```json
+{
+  "participant_id": "f3a2c1d4-8e6b-4a2f-9c1e-7d5b3f2a1e8c",
+  "condition": "B",
+  "decision": "accepted",
+  "timestamp": "2026-03-28T14:22:31.408Z",
+  "latency_ms": 3421
+}
+```
 
 ## Setup
 
 1. Install dependencies:
-   ```bash
+```bash
    npm install
-   ```
+```
 2. Start the development server:
-   ```bash
+```bash
    npm run dev
-   ```
+```
 3. Open [localhost](http://localhost:3000)
 
 ## API Integration (Optional)
-Check `app/page.tsx` for a commented-out standard fetch block utilizing Groq (`https://api.groq.com/openai/v1/chat/completions`) or any OpenAI compatible schema. You can use any APIKey endpoint to inject generative messaging by un-commenting the code.
+Check `app/page.tsx` for a commented-out standard fetch block utilizing Groq (`https://api.groq.com/openai/v1/chat/completions`) or any LLM compatible schema. You can use any APIKey endpoint to inject generative messaging by un-commenting the code.
